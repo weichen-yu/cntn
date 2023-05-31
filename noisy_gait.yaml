@@ -1,0 +1,9 @@
+name: noisy_gait
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - pytorch=1.10.1=py3.8_cuda11.3_cudnn8.3.2_0
+  - torchvision=0.13.1=py38_cu113
+  - pip:
+    - tqdm
