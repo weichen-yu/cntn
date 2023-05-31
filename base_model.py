@@ -16,8 +16,6 @@ import os.path as osp
 import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as tordata
-import timm
-from timm.scheduler import * # CosineLRScheduler, MultiStepLRScheduler, PlateauLRScheduler, PolyLRScheduler, StepLRScheduler, TanhLRScheduler
 
 from tqdm import tqdm
 from torch.cuda.amp import autocast
@@ -139,7 +137,7 @@ class BaseModel(MetaModel, nn.Module):
         self.msg_mgr = get_msg_mgr()
         self.cfgs = cfgs
         self.iteration = 0
-        self.kd_iter = 10
+        self.kd_iter = 50000
         self.ema = 0.99
         self.soft_loss = get_ddp_module(SoftLoss().cuda())
 
@@ -246,15 +244,9 @@ class BaseModel(MetaModel, nn.Module):
 
     def get_scheduler(self, scheduler_cfg):
         self.msg_mgr.log_info(scheduler_cfg)
-        Scheduler = getattr(timm.scheduler, scheduler_cfg['scheduler'])
-        valid_arg = {'t_initial': 0, 'lr_min': 5e-06, 'warmup_t': 4000, 'warmup_lr_init': 1e-06, 'k_decay': 1.0}
-        for k in valid_arg.keys():
-            valid_arg[k] = scheduler_cfg[k]
-        # valid_arg = scheduler_cfg[scheduler_cfg['scheduler']]
-        # Scheduler = get_attr_from(
-        #    [optim.lr_scheduler], scheduler_cfg['scheduler'])
-        # valid_arg = get_valid_args(Scheduler, scheduler_cfg, ['scheduler'])
-        # scheduler = Scheduler(self.optimizer, **valid_arg)
+        Scheduler = get_attr_from(
+            [optim.lr_scheduler], scheduler_cfg['scheduler'])
+        valid_arg = get_valid_args(Scheduler, scheduler_cfg, ['scheduler'])
         scheduler = Scheduler(self.optimizer, **valid_arg)
         return scheduler
 
@@ -388,7 +380,7 @@ class BaseModel(MetaModel, nn.Module):
             self.optimizer.step()
 
         self.iteration += 1
-        self.scheduler.step(self.iteration)
+        self.scheduler.step()
         return True
 
     def inference(self, rank):
@@ -502,7 +494,7 @@ class BaseModel(MetaModel, nn.Module):
 
             ok = model.train_step(loss_sum)
             model_mo.optimizer.step()
-            model_mo.scheduler.step(model.iteration)
+            model_mo.scheduler.step()
             if not ok:
                 continue
 

@@ -42,14 +42,17 @@ def run_model(cfgs, training):
     msg_mgr.log_info(model_cfg)
     Model = getattr(models, model_cfg['model'])
     model = Model(cfgs, training)
+    model_mo = Model(cfgs, training)
     if training and cfgs['trainer_cfg']['sync_BN']:
         model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
+        model_mo = nn.SyncBatchNorm.convert_sync_batchnorm(model_mo)
     model = get_ddp_module(model)
+    model_mo = get_ddp_module(model_mo)
     msg_mgr.log_info(params_count(model))
     msg_mgr.log_info("Model Initialization Finished!")
 
     if training:
-        Model.run_train(model)
+        Model.run_train(model, model_mo)
     else:
         Model.run_test(model)
 
