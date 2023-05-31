@@ -1,7 +1,7 @@
 # Note  : *** the batch_size should be equal to the gpus number at the test phase!!! ***
 data_cfg:
   dataset_name: CASIA-B
-  dataset_root: /home2/ywc/workspace/output_pkl_64
+  dataset_root: 
   dataset_partition: ./misc/partitions/CASIA-B_include_005.json
   num_workers: 1
   remove_no_gallery: false
