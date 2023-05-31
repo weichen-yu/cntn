@@ -8,7 +8,7 @@ conda env create -f noisy_gait.yaml
 conda activate noisy_gait
 ```
 
-# Dataset
+# Noisy Dataset Construction
 First please download the original data.
 
 CASIA-B  http://www.cbsr.ia.ac.cn/GaitDatasetB-silh.zip
