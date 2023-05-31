@@ -10,8 +10,11 @@ conda activate noisy_gait
 
 # Dataset
 First please download the original data.
+
 CASIA-B  http://www.cbsr.ia.ac.cn/GaitDatasetB-silh.zip
+
 OUMVLP  http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html
+
 Outdoor-Gait  https://drive.google.com/drive/folders/1XRWq40G3Zk03YaELywxuVKNodul4TziG
 
 To create a noisy labels gait dataset on CL condition, use the following operation 
@@ -29,11 +32,15 @@ python add_noisy_randm.py --src_dir CASIA-B --des_dir Noisy-CL-CASIA-B --noise_r
 
 # Run the code
 You can choose the model zoo e.g. GaitSet, GaitGL in the ./config/XXX.yaml and uncomment the corresponding command in train.sh. Then,
+
 train the model by
+
 '''
 sh train.sh
 '''
+
 test the model by
+
 '''
 sh test.sh
 '''
