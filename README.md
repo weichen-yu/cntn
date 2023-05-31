@@ -35,15 +35,15 @@ You can choose the model zoo e.g. GaitSet, GaitGL in the ./config/XXX.yaml and u
 
 train the model by
 
-'''
+```
 sh train.sh
-'''
+```
 
 test the model by
 
-'''
+```
 sh test.sh
-'''
+```
 
 # Acknowledgement
 We appreciate the wonderful base implementation from [Fan etal.](https://github.com/ShiqiYu/OpenGait) and their effort for keeping updates of this code base. 
